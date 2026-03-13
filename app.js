@@ -31,4 +31,35 @@ function renderThumbs() {
    }).join("");
 }
 
+function renderHero(index) {
+  const item = data[index];
+
+  // Actualizar la imagen principal
+  heroImg.src = item.src;
+  heroImg.alt = item.title;
+
+  // Actualizar el título y la descripción
+  heroTitle.textContent = item.title;
+  heroDesc.textContent = item.desc;
+
+  // Actualizar el contador
+  counter.textContent = `${index + 1} / ${data.length}`;
+
+  // Recorrer miniaturas para marcar la activa
+  document.querySelectorAll(".thumb").forEach((thumb, i) => {
+    thumb.classList.toggle("active", i === index);
+  });
+
+  // Revisar si la imagen actual tiene like
+  const isLiked = likes[item.id] === true;
+
+  // Cambiar el simbolo del botón
+  likeBtn.textContent = isLiked ? "❤️" : "🤍";
+
+  // Aplicar o quitar la clase visual
+  likeBtn.classList.toggle("on", isLiked);
+
+  
+}
+
 renderThumbs(); // Llamar a la función para mostrar las miniaturas
