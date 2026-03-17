@@ -69,5 +69,17 @@ thumbs.addEventListener("click", (e) => {
   renderHero(currentIndex); // Renderizar la imagen principal con el nuevo índice
  });
 
+ // Listener para el botón de "me gusta"
+ likeBtn.addEventListener("click", () => {
+  const currentItem = data[currentIndex];
+  // Alternar el estado de "me gusta"
+  likes[currentItem.id] = !likes[currentItem.id]; 
+
+  const isLiked = likes[currentItem.id]; // Verificar el nuevo estado
+  likeBtn.textContent = isLiked ? "❤️" : "🤍"; 
+  likeBtn.classList.toggle("on", isLiked); // Aplicar o quitar la clase visual
+  likeBtn.setAttribute("aria-pressed", isLiked); // Actualizar el atributo ARIA
+ });
+
 renderThumbs(); // Llamar a la función para mostrar las miniaturas
 renderHero(currentIndex); // Mostrar la imagen inicial
