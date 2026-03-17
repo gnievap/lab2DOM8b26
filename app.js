@@ -1,9 +1,9 @@
 const data = [
-  { id: "p01", title: "Aurora", desc: "Luz suave y cielo polar", src: "https://picsum.photos/id/1018/1200/675" },
-  { id: "p02", title: "Montaña", desc: "Rocas y niebla", src: "https://picsum.photos/id/1015/1200/675" },
-  { id: "p03", title: "Ciudad", desc: "Atardecer urbano", src: "https://picsum.photos/id/1011/1200/675" },
-  { id: "p04", title: "Bosque", desc: "Verde profundo", src: "https://picsum.photos/id/1020/1200/675" },
-  { id: "p05", title: "Mar", desc: "Horizonte y calma", src: "https://picsum.photos/id/1016/1200/675" },
+  { id: "p01", title: "Montaña", desc: "Rocas y niebla", src: "https://picsum.photos/id/1018/1200/675" },
+  { id: "p02", title: "Mar", desc: "Horizonte y calma", src: "https://picsum.photos/id/1015/1200/675" },
+  { id: "p03", title: "Río", desc: "Tranquilidad", src: "https://picsum.photos/id/1011/1200/675" },
+  { id: "p04", title: "Bosque", desc: "Alaska salvaje", src: "https://picsum.photos/id/1020/1200/675" },
+  { id: "p05", title: "Cañón", desc: "Desierto rojizo", src: "https://picsum.photos/id/1016/1200/675" },
   { id: "p06", title: "Ruta", desc: "Camino en perspectiva", src: "https://picsum.photos/id/1005/1200/675" }
 ];
 
@@ -58,8 +58,16 @@ function renderHero(index) {
 
   // Aplicar o quitar la clase visual
   likeBtn.classList.toggle("on", isLiked);
-
-  
 }
 
+// Listener para clicks en las miniaturas
+thumbs.addEventListener("click", (e) => {
+  const thumb = e.target.closest(".thumb");
+  if (!thumb) return; // Si no se hizo click en una miniatura, salir
+
+  currentIndex = Number(thumb.dataset.index); // Actualizar el índice actual
+  renderHero(currentIndex); // Renderizar la imagen principal con el nuevo índice
+ });
+
 renderThumbs(); // Llamar a la función para mostrar las miniaturas
+renderHero(currentIndex); // Mostrar la imagen inicial
