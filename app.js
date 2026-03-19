@@ -96,5 +96,60 @@ function updatePlayButton() {
   playBtn.dataset.state = isPlaying ? "pause" : "play";
 }
 
+function changeSlide( newIndex ){
+  heroImg.classList.add("fade-out"); // Agregar clase para animación de salida
+  setTimeout(() => {
+    currentIndex = newIndex; // Actualizar el índice actual
+    renderHero(currentIndex); // Renderizar la nueva imagen principal
+    heroImg.classList.remove("fade-out"); // Quitar clase para animación de entrada
+  }, 350);
+}
+
+function nextSlide() {
+  const newIndex = (currentIndex + 1) % data.length; // Calcular el índice de la siguiente imagen
+  changeSlide(newIndex);
+}
+
+function prevSlide() {
+  const newIndex = (currentIndex - 1 + data.length) % data.length; // Calcular el índice de la imagen anterior
+  changeSlide(newIndex);
+}
+
+function startAutoPlay(){
+  autoPlayId = setInterval(() => {
+    nextSlide();
+  }, AUTO_TIME);
+  isPlaying = true;
+  updatePlayButton();
+}
+
+function stopAutoPlay(){
+  clearInterval(autoPlayId);
+  autoPlayId = null;
+  isPlaying = false;
+  updatePlayButton();
+}
+
+function toggleAutoPlay(){
+  if ( isPlaying ){
+    stopAutoPlay();
+  } else {
+    startAutoPlay();
+  }
+}
+
+nextBtn.addEventListener("click", nextSlide);
+prevBtn.addEventListener("click", prevSlide);
+playBtn.addEventListener("click", toggleAutoPlay);
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight") {
+    nextSlide();
+  } else if (e.key === "ArrowLeft") {
+    prevSlide();
+  }
+});
+
+
 renderThumbs(); // Llamar a la función para mostrar las miniaturas
 renderHero(currentIndex); // Mostrar la imagen inicial
