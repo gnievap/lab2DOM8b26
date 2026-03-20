@@ -8,6 +8,7 @@ const data = [
 ];
 
 // Recuperar elementos del DOM
+const frame = document.querySelector(".frame");
 const thumbs = document.querySelector("#thumbs"); //miniaturas
 const heroImg = document.querySelector("#heroImg");  // imagen principal
 const heroTitle = document.querySelector("#heroTitle"); // título de la imagen
@@ -25,7 +26,69 @@ const likes ={}; // Objeto para almacenar los "me gusta" por imagen
 
 let autoPlayId = null; // Variable para almacenar el ID del intervalo de autoplay
 let isPlaying = false; // Estado de reproducción automática
-const AUTO_TIME = 1500; // Tiempo entre cambios automáticos (3 segundos)
+const AUTO_TIME = 2500; // Tiempo entre cambios automáticos (2 segundos y medio)
+
+// dots y tracks no existen en el DOM actual
+// se intentan buscar, pero si no están se crearán
+// usando js
+let dots = document.querySelector("#dots");
+let track = document.querySelector(".track");
+
+// variables para detectar swipe (deslizamiento)
+let startX = 0;
+let currentX = 0;
+let isDragging = false;
+let moved = false;
+// distancia mínima para considerar un swipe
+const SWIPE_THRESHOLD = 50;
+
+// Crear un track del carrusel
+// Crea un contenedor .track que tendrá todas la imágenes
+// alineadas horizontalmente
+// Es la base del efecto slide con translateX
+function createTrack(){
+  //Si existe no hacer nada
+  if ( track ) return;
+
+  // Si no existe, crear el track
+  track = document.createElement("div");
+  track.className = "track";
+
+  data.forEach((item) => {
+    const img = document.createElement("img");
+    img.src = item.src;
+    img.alt = item.title;
+    track.appendChild(img);
+  });
+  frame.prepend(track);
+}
+
+// Crear dots
+// Crear los botones indicadores del carrusel
+// Cada dot va a representar una imagen
+// El dot activo debe coincidir con currentIndex
+function createDots() {
+  if ( !dots ) {
+    dots = document.createElement("div");
+    dots.id = "dots";
+    dots.className = "dots";
+    frame.appendChild(dots);
+  }
+
+  dots.innerHTML = data.map((_, index)=>{
+    return `
+      <button
+       class = "dot ${index === currentIndex ?? "active"}"
+       type="button"
+       data-index="${index}"
+       aria-label="Ir a la imagen ${index + 1}">
+      </button>
+    `;
+  }).join("");
+
+
+}
+
 
 // Renderizar las miniaturas
 function renderThumbs() {
