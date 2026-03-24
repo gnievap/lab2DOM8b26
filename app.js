@@ -134,8 +134,13 @@ function updateLikeBtn(){
   likeBtn.textContent = isLiked ? "❤️" : "🤍"; 
   likeBtn.classList.toggle("on", isLiked); // Aplicar o quitar la clase visual
   likeBtn.setAttribute("aria-pressed", isLiked); // Actualizar el atributo ARIA
-
 }
+
+
+
+
+
+
 
 // Renderizar las miniaturas
 function renderThumbs() {
@@ -245,6 +250,7 @@ function toggleAutoPlay(){
   }
 }
 
+// Renderizar la interfaz cada vez que cambia currentIndex
 function renderAll(animate = true){
   updateTrack(animate);
   updateMeta();
@@ -252,6 +258,66 @@ function renderAll(animate = true){
   updateDots();
   updateLikeBtn();
 }
+
+// Animación pop del like
+// Agrega o elimina la clase pop para reiniciar la animacion CSS al dar click
+function animateLikePop(){
+  likeBtn.classList.remove("pop");
+  void likeBtn.offsetWidth;
+  likeBtn.classList.add("pop");
+}
+
+// Manejo de SWIPE - inicio
+// Registra la posición inicial del puntero y
+// desactiva temporalmente la transición 
+function handlePointerDown( e ) {
+  startX = e.clientX;
+  currentX = e.clientX;
+  isDragging = true;
+  moved = false;
+
+  if ( track ){
+    track.style.transition = "none";
+  }
+}
+
+// Manejo de SWIPE - movimiento
+// Actualiza la posición del puntero
+// si el movimiento supera 5px, se considera arrastre
+function handlerPointerMove( e ){
+  if ( !isDragging ) return;
+
+  currentX = e.clientX;
+  const diff = currentX - startX;
+
+  if ( Math.abs(diff) > 5 ){
+    moved = true;
+  }
+}
+
+// Manejo de SWIPE - FIN
+// Al soltar el mouse, se calcula la distancia recorrida
+// Si supera el umbral, cambia la imagen
+// Si no, solo regresa el track a su sitio
+function handlePointerUp(){
+  if ( !isDragging ) return;
+
+  const diff = currentX - startX;
+  isDragging = false;
+
+  if ( Math.abs(diff) >= SWIPE_THRESHOLD ){
+    if ( diff < 0 ){
+      nextSlide();
+    }
+    else {
+      prevSlide();
+    }
+  } else {
+    updateTrack( true );
+  }
+}
+
+
 
 nextBtn.addEventListener("click", nextSlide);
 prevBtn.addEventListener("click", prevSlide);
@@ -264,6 +330,12 @@ document.addEventListener("keydown", (e) => {
     prevSlide();
   }
 });
+
+// Eventos de SWIPE con el mouse
+frame.addEventListener("pointerdown", handlePointerDown);
+frame.addEventListener("pointermove", handlerPointerMove);
+frame.addEventListener("pointerup", handlePointerUp);
+frame.addEventListener("pointerleave", handlePointerUp);
 
 
 renderThumbs(); // Llamar a la función para mostrar las miniaturas
